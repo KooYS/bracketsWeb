@@ -137,7 +137,7 @@
     }
 }
 
-#wrap #contentArea .contentWrap.intro {
+#wrap #contentArea .contentWrap.intro {    // 게임
     position: relative;
     min-height: 100vh;
     z-index: 1;
@@ -148,6 +148,24 @@
     -o-background-size: cover;
     -ms-background-size: cover;
     background-size: cover
+}
+
+#wrap #contentArea .contentWrap.intro.game {    // 게임
+    position: relative;
+    min-height: 0vh;
+    z-index: 1;
+    color: #fff;
+    background: url(background.jpg) center no-repeat #000; //배경
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-size: cover
+}
+#wrap #contentArea .contentWrap.intro .text_wrap.game {
+    padding: 0px;
+    z-index: 0;
+    font-size: 0px
 }
 
 #wrap #contentArea .contentWrap.intro .text_wrap {
@@ -486,6 +504,42 @@
     border-bottom: 2px solid #000
 }
 
+#wrap #contentArea .textArea div.section .shead.intro01 {
+   position: relative;
+    background: url(background.jpg) center no-repeat #000; //배경
+    width: 500px;
+    height: 500px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-size: cover
+}
+
+#wrap #contentArea .textArea div.section .shead.intro02 {
+   position: relative;
+    background: url(background2.jpg) center no-repeat #000; //배경
+    width: 500px;
+    height: 500px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-size: cover
+}
+
+#wrap #contentArea .textArea div.section .shead.intro03 {
+   position: relative;
+    background: url(images/log.jpg) center no-repeat #000; //배경
+    width: 500px;
+    height: 500px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-size: cover
+}
+
 #wrap #contentArea .textArea div.section .shead h3>strong {
     font-size: 1.1em;
     vertical-align: middle
@@ -618,10 +672,10 @@
 #wrap #contentArea .mapArea .mapWrap {
     position: absolute;
     top: 0%;
-    left: 0%;
-    width: 539px;
-    height: 404px;
-    background: url(background2.jpg) center top no-repeat; //map
+    left:0%;
+    width: 2500px;
+    height: 3139px;
+    background: url(map.jpg) center top no-repeat; //map
     background-size: 100%;
     -webkit-transform: translate(-50% -50%);
     -moz-transform: translate(-50% -50%);
@@ -1382,9 +1436,9 @@
     }
 }
 
-@media only screen and (max-width:768px) {
+@media only screen and (max-width:768px) {   /* 모바일*/
     #wrap .main .bg_after {
-        background: url(http://images.joins.com/newsroom/2017/0713_highway/m/m_main_bg_02.jpg) top center no-repeat;
+        background: url(background2.jpg) top center no-repeat;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -1605,9 +1659,9 @@
     }
 }
 
-@media only screen and (max-width:768px) {
+@media only screen and (max-width:768px) { /*모바일*/
     #wrap .main .bg_layer {
-        background: url(http://images.joins.com/newsroom/2017/0713_highway/m/m_main_bg_03.png) top left no-repeat;
+        background: url() top left no-repeat;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;

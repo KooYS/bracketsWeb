@@ -1,0 +1,505 @@
+/* IE 콘솔 */
+if(typeof(window.console) == 'undefined') {console = { log: function () { } }; }
+var foin_where_ref = [
+"m.dcinside.com",
+"heymr.co.kr"
+];
+
+var foin_Base64 = {
+			// private property
+			_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+		  // public method for encoding
+		 	encode : function (input) 
+		 	{
+			  var output = "";
+			  var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+			  var i = 0;
+
+			  input = foin_Base64._utf8_encode(input);
+
+			  while (i < input.length) {
+
+				  chr1 = input.charCodeAt(i++);
+				  chr2 = input.charCodeAt(i++);
+				  chr3 = input.charCodeAt(i++);
+
+				  enc1 = chr1 >> 2;
+				  enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+				  enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+				  enc4 = chr3 & 63;
+
+				  if (isNaN(chr2)) {
+					  enc3 = enc4 = 64;
+				  } else if (isNaN(chr3)) {
+					  enc4 = 64;
+				  }
+
+				  output = output +
+					  this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+					  this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+
+			  }
+
+			  return output;
+		 	},
+		 	// private method for UTF-8 encoding
+			_utf8_encode : function (string) 
+			{
+				   string = string.replace(/\r\n/g,"\n");
+				   var utftext = "";
+				   for (var n = 0; n < string.length; n++) 
+				   {
+					   var c = string.charCodeAt(n);
+					   if (c < 128) {
+						   utftext += String.fromCharCode(c);
+					   }
+					   else if((c > 127) && (c < 2048)) {
+						   utftext += String.fromCharCode((c >> 6) | 192);
+						   utftext += String.fromCharCode((c & 63) | 128);
+					   }
+					   else {
+						   utftext += String.fromCharCode((c >> 12) | 224);
+						   utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+						   utftext += String.fromCharCode((c & 63) | 128);
+					   }
+				   }
+				   return utftext;
+			}
+};
+
+/* 포인정보 모듈 */
+(function () {
+		/*이미 존재하는지 확인 */
+    if (typeof(window.foin_cookie) != 'undefined') return;
+    foin_cookie = new Object();
+
+    foin_cookie.obj = function (set) {
+        this.setting = set;
+    };
+
+		/**************************************************************************/
+		/***  Utility                                                          ****/
+		/**************************************************************************/
+		foin_cookie.obj.prototype.getParam = function(url,name)
+		{
+			var rtnval="";
+			try
+			{
+			  var parameters = new Array();
+			  parameters = (url.slice(url.indexOf("?")+1, url.length)).split("&");
+			  for( var i = 0 ; i < parameters.length ; i++ ) 
+			  {
+			    if(parameters[i].indexOf(name) == 0) 
+			    {
+			      var l_item=parameters[i].split("=");
+			      if(l_item==null || l_item.length!=2) continue;
+			      l_item[0] = l_item[0].replace(/^\s+|\s+$/g,"");
+			      if(l_item[0]==name)
+			      {
+			      	rtnval = l_item[1];
+			      	break;
+			      }
+			    }
+			  }
+			}
+			catch(e)
+			{
+				rtnval = "";
+			}
+			return rtnval;
+		}
+
+		foin_cookie.obj.prototype.getUrl = function(url)
+		{
+			var rtnVal="";
+			try
+			{
+				url = url.replace(/\\/gi, '/');
+				var begin = url.indexOf("//");
+				if(begin<0) begin = 0;
+				else begin+=2;
+				var end = url.indexOf("/",begin);
+				if(end<0) end = url.indexOf("?",begin);
+				if(end<0) end=url.length;
+				rtnVal=url.substring(begin,end);			
+				rtnVal=rtnVal.toLowerCase();	
+				if(rtnVal.indexOf(".")<0) rtnVal="";
+			}
+			catch(e)
+			{
+				rtnVal = "";
+			}
+			return rtnVal;
+		}
+		/**************************************************************************/
+		/***  html 5                                                           ****/
+		/**************************************************************************/
+    foin_cookie.obj.prototype.isHtml5 = function () 
+    {
+			var rtnVal=false;
+			try
+			{
+				if (typeof(Storage) !== "undefined") 
+				{
+				  rtnVal=true;
+				} 
+				else 
+				{
+					rtnVal=false;
+				}				
+			}
+			catch(e)
+			{
+				console.log('isHtml5 error : '+e.message);
+				rtnVal=false;
+			}
+      return rtnVal;
+    };
+
+    foin_cookie.obj.prototype.setHtml5 = function (key,val) 
+    {
+    	var rtnVal=false;
+			try
+			{
+				if(typeof(key)=='undefined' || key.length<1) 
+				{
+					rtnVal=false;
+				}
+				else
+				{
+					localStorage.setItem(key,val);
+					rtnVal=true;
+				}
+			}
+			catch(e)
+			{
+				rtnVal=false;
+				console.log('setHtml5 error : '+e.message);
+			}
+			return rtnVal;
+    };
+
+    foin_cookie.obj.prototype.getHtml5 = function (key) 
+    {
+    	var rtnVal=null;
+    	
+			try
+			{
+				if(typeof(key)=='undefined' || key.length<1) 
+				{
+					rtnVal=null;
+				}
+				else
+				{
+					rtnVal = localStorage.getItem(key);
+				}
+			}
+			catch(e)
+			{
+				rtnVal=null;
+				console.log('getHtml5 error : '+e.message);
+			}
+			return rtnVal;
+    };
+
+    foin_cookie.obj.prototype.removeHtml5 = function (key) 
+    {
+    	var rtnVal=false;
+    	
+			try
+			{
+				if(typeof(key)=='undefined' || key.length<1) 
+				{
+					rtnVal=false;
+				}
+				else
+				{
+					localStorage.removeItem(key);
+					rtnVal=true;
+				}
+			}
+			catch(e)
+			{
+				rtnVal=false;
+				console.log('clearHtml5 error : '+e.message);
+			}
+			return rtnVal;
+    };
+
+		/**************************************************************************/
+		/***  Cookie                                                           ****/
+		/**************************************************************************/
+    foin_cookie.obj.prototype.setCookie = function (key,val,exdays) 
+    {
+    	var rtnVal=false;
+    	if(typeof(key)=='undefined' || key.length<1) return false;
+    	if(typeof(exdays)=='undefined' || exdays.length<1) exdays=365;
+    	
+			try
+			{
+	  		var d = new Date();
+    		d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    		var expires = "expires="+ d.toUTCString();
+    		document.cookie = key + "=" + val + "; " + expires;
+    		rtnVal=true;
+			}
+			catch(e)
+			{
+				rtnVal=false;
+				console.log('setCookie error : '+e.message);
+			}
+			return rtnVal;
+    };
+
+    foin_cookie.obj.prototype.getCookie = function (key) 
+    {
+    	var rtnVal=null;
+    	if(typeof(key)=='undefined' || key.length<1) return null;
+			try
+			{
+				var name = key + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i = 0; rtnVal==null && i <ca.length; i++) 
+		    {
+		      var c = ca[i];
+		      while (c.charAt(0)==' ') 
+		      {
+		      	c = c.substring(1);
+		      }
+		      if (c.indexOf(name) == 0) 
+		      {
+		        rtnVal = c.substring(name.length,c.length);
+		        break;
+		      }
+		    }
+		    return rtnVal;
+			}
+			catch(e)
+			{
+				rtnVal=null;
+				console.log('getCookie error : '+e.message);
+			}
+			return rtnVal;
+    };
+    
+    foin_cookie.obj.prototype.removeCookie = function (key) 
+    {
+    	var rtnVal=false;
+    	var val="empty";
+    	if(typeof(key)=='undefined' || key.length<1) return false;
+			try
+			{
+	  		var d = new Date();
+    		d.setTime(d.getTime() - 1000);
+    		var expires = "expires="+ d.toUTCString();
+    		document.cookie = key + "=" + val + "; " + expires;
+    		rtnVal=true;
+			}
+			catch(e)
+			{
+				rtnVal=false;
+				console.log('removeCookie error : '+e.message);
+			}
+			return rtnVal;
+    };
+    
+		/**************************************************************************/
+		/***  Keyword Procedure                                                ****/
+		/**************************************************************************/
+    foin_cookie.obj.prototype.getKeyword = function () 
+    {
+    	var rtnVal=null;
+			try
+			{
+				var preUrl=document.referrer;
+				var l_domain = foinCookie.getUrl(preUrl);
+				var keyword="";
+				if(l_domain.indexOf("naver.com")>=0) keyword=foinCookie.getParam(preUrl,"query");
+				else if(l_domain.indexOf("daum.net")>=0) keyword=foinCookie.getParam(preUrl,"q");
+				else keyword="";
+				keyword=keyword.replace(/,/g,"");
+				rtnVal=decodeURIComponent(keyword);
+			}
+			catch(e)
+			{
+				rtnVal=null;
+				console.log('getKeyword error : '+e.message);
+			}
+			return rtnVal;
+    };
+
+    foin_cookie.obj.prototype.setKeyword_local = function (rtnInfo) 
+    {
+    	var rtnVal=false;
+			var setting=this.setting;
+    	try
+    	{
+				if(typeof(rtnInfo)!='undefined' && rtnInfo!=null && rtnInfo.success==true && rtnInfo.cookieval!=null && rtnInfo.cookieval.length>0)
+				{
+					/* 전송 url이 있는지 확인 */
+	    		if(setting.adServerUrl.length>30)
+	    		{
+console.log("keyword:"+rtnInfo.cookieval);  			
+	    			var l_url=setting.adServerUrl+"?adservicename=VLD&method=set&name=KEYWORD&encode_yn=n&copy_yn=y&data="+rtnInfo.cookieval+"";
+				    var l_Head = document.getElementsByTagName('HEAD')[0];
+				    if(typeof(l_Head)=='undefined') l_Head = document.getElementsByTagName('BODY')[0];
+				    var scrObj=document.createElement('SCRIPT');
+				    scrObj.type = 'text/javascript';
+						scrObj.async = true;
+						scrObj.defer = true;
+						scrObj.src = l_url;
+						l_Head.appendChild(scrObj); 
+console.log("l_url:"+l_url);  			
+						rtnVal=true; 		
+					}
+				}
+			}
+			catch(e)
+			{
+				rtnVal=false;
+				console.log('setKeyword_local error : '+e.message);
+			}
+			return rtnVal;
+    };
+
+    foin_cookie.obj.prototype.setKeyword_global = function (keyword)
+    {
+    	var rtnVal=false;
+    	if(typeof(keyword)=='undefined' || keyword==null || keyword.length<1) return;
+			var setting=this.setting;
+    	try
+    	{
+    		var l_date = new Date();
+				var l_url=setting.refServerUrl+"?servicename=KEYWORD&keyword="+keyword+"&tm="+l_date.getTime()+"&jquerycallback=foinCookie.setKeyword_local";
+		    var l_Head = document.getElementsByTagName('HEAD')[0];
+		    if(typeof(l_Head)=='undefined') l_Head = document.getElementsByTagName('BODY')[0];
+		    var scrObj=document.createElement('SCRIPT');
+		    scrObj.type = 'text/javascript';
+				scrObj.async = true;
+				scrObj.defer = true;
+				scrObj.src = l_url;
+				l_Head.appendChild(scrObj);  		
+				rtnVal=true;
+			}
+			catch(e)
+			{
+				rtnVal=false;
+				console.log('setKeyword_global error : '+e.message);
+			}
+			return rtnVal;
+    };
+
+		/**************************************************************************/
+		/***  Referrer  Procedure                                              ****/
+		/**************************************************************************/
+    foin_cookie.obj.prototype.getRefer = function () 
+    {
+    	var rtnVal=null;
+			try
+			{
+				var nowUrl=location.href;
+				var preUrl=document.referrer;
+console.log("nowUrl:"+nowUrl);
+console.log("preUrl:"+preUrl);
+				/* 만약 무조건 ref 값으로 하라고 되어 있는 도메인이 있다면... */
+				if(typeof(foin_where_ref)!="undefined" && foin_where_ref.length!=null)
+				{
+					var l_host = foinCookie.getUrl(nowUrl);
+					if(l_host!=null && l_host.length>0)
+					{
+						for(var i=0;i<foin_where_ref.length;i++)
+						{
+							if(foin_where_ref[i]==l_host)
+							{
+								nowUrl = preUrl;
+								break;
+							}
+						}
+					}
+				}
+				/* 현재의 URL이 광고 시스템 호출 URL이 아니면, 현재 URL로 REFFER로 사용 함 */
+				if(nowUrl.indexOf("cgi-bin")<0)
+				{
+					preUrl = nowUrl;
+				}
+				/* REFFER 이 광고 시스템 호출 URL이면 무시함 */
+				if(preUrl.indexOf("cgi-bin")>=0)
+				{
+					preUrl = "";
+				}
+				if(typeof(preUrl)=='undefined' || preUrl==null || preUrl.length<1)
+				{
+					rtnVal=null;						
+				}
+				else
+				{
+					rtnVal=preUrl;
+				}
+			}
+			catch(e)
+			{
+				rtnVal=null;
+				console.log('getRefer error : '+e.message);
+			}
+			return rtnVal;
+    };
+    
+    foin_cookie.obj.prototype.setReferrer_local = function (rtnInfo) 
+    {
+    	/*설정은 아직 하지 않음 */
+    	return;
+		};
+
+    foin_cookie.obj.prototype.setReferrer_global = function (ref,reflist) 
+    {
+    	if(typeof(ref)=='undefined' || ref==null || ref.length<1) return;
+			var setting=this.setting;
+    	try
+    	{
+    		var l_date = new Date();
+    		var l_url=setting.refServerUrl+"?servicename=REF&ref="+ref+"&cookieval="+reflist+"&tm="+l_date.getTime()+"&jquerycallback=foinCookie.setReferrer_local";
+		    var l_Head = document.getElementsByTagName('HEAD')[0];
+		    if(typeof(l_Head)=='undefined') l_Head = document.getElementsByTagName('BODY')[0];
+		    var scrObj=document.createElement('SCRIPT');
+		    scrObj.type = 'text/javascript';
+				scrObj.async = true;
+				scrObj.defer = true;
+				scrObj.src = l_url;
+				l_Head.appendChild(scrObj);  		
+			}
+			catch(e)
+			{
+				console.log('setReferrer_global error : '+e.message);
+			}
+		};
+
+})();
+
+
+try
+{
+	if(typeof(foin_cookie_setting)!='undefined' && foin_cookie_setting.slotNum!='undefined' && foin_cookie_setting.slotNum.length<1)
+	{
+console.log("foin step1");
+		window.foinCookie = new foin_cookie.obj(foin_cookie_setting);
+		/* keyword send */
+		var keyWord = foinCookie.getKeyword();
+console.log("keyWord:"+keyWord);
+		if(keyWord!=null && keyWord.length>0)
+		{
+			keyWord=foin_Base64.encode(keyWord);
+			foinCookie.setKeyword_global(keyWord);
+		}
+		/* referrer send */
+		var refVal=foinCookie.getRefer();
+		if(refVal!=null && refVal.length>0)
+		{
+			refVal=foin_Base64.encode(refVal);
+			foinCookie.setReferrer_global(refVal);
+		}
+	}
+}
+catch(e)
+{
+	console.log(e.message);
+}
