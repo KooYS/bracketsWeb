@@ -41,9 +41,9 @@
     <link rel="stylesheet" type="text/css" href="common.css" />
     <link rel="stylesheet" type="text/css" href="myPage.css" />
 
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/animation.gsap.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/animation.gsap.js"></script>
 
 
 
@@ -61,16 +61,6 @@
         opacity: 1;
         scale: 0px;
     }
-    
-    .spacer {
-        text-align: center;
-        min-height: 100px;
-        background-image: url("images/spacer_v.gif");
-    }
-    
-    .spacer.s0 {
-        min-height: 1px;
-    }
 </style>
 
 
@@ -83,7 +73,6 @@
     <!-- 초기화 스크립트 body 처음에 넣어 주세요 -->
     <!-- <script type="text/javascript" src="http://static.joins.com/common/ui/script/articleCounter.js"></script>
     <script type="text/javascript" src="http://joongang.joins.com/special/common/script/init.s.js"></script>-->
-    <div id="trigger" class="spacer s0"></div>
     <div id="wrap">
         <header class="black">
             <div>
@@ -121,10 +110,9 @@
             <div class="contentWrap intro game">
                 <div class="text_wrap game">
                     <canvas id="cv" width="800" height="480"></canvas>
-                    <script src="game.js" charset="utf-8">
-                    </script>
+                    <script src="game.js" charset="utf-8"></script>
 
-                    <body onload="StartGame();">
+                    <body onload="StartGame();"></body>
                 </div>
 
             </div>
@@ -326,10 +314,8 @@
         </div>
     </div>
 
-    </div>
 
-    </body>
-
+</body>
 
 
 
@@ -339,30 +325,89 @@
 
 
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $(".mapWrap.lazy").click(function() {
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".mapWrap.lazy").click(function() {
+            $(".mapWrap.lazy").animate({
+                left: '-500px',
+                top: '-500px'
+            }, 500);
+
+        });
+    });
+
+
+    new ScrollMagic.Scene({
+            triggerElement: '#fadein-trigger'
+        })
+        .setTween('#fadein-trigger', .500, {
+            x: 400
+        })
+        .addTo(controller);
+
+    new ScrollMagic.Scene({
+            triggerElement: "#fadeout-trigger",
+            duration: 200
+        })
+        .addTo(controller)
+        .addIndicators() // add indicators (requires plugin)
+        .on("update", function(e) {
+            //$("#scrollDirection").text(e.target.controller().info("scrollDirection"));
+        })
+        .on("enter leave", function(e) {
+            if (e.type == "enter") {
+
+            }
+
+        })
+        .on("start end", function(e) {
+        //console.log(e.type);
+            /*$("#lastHit").text(e.type == "start" ? "top" : "bottom");
+            if (e.type == "end") {
                 $(".mapWrap.lazy").animate({
                     left: '-500px',
                     top: '-500px'
                 }, 500);
-
-            });
+            }*/
+       /* if (e.type == "start") {
+                $(".mapWrap.lazy").animate({
+                    left: '-500px',
+                    top: '-500px'
+                }, 500);
+            }
+        else{
+            $(".mapWrap.lazy").animate({
+                    left: '0px',
+                    top: '0px'
+                }, 500);
+        }*/
+        })
+        .on("progress", function(e) {
+        
+           // $("#progress").text(e.progress.toFixed(3));
+            if (e.progress  == 0) {
+                $(".mapWrap.lazy").animate({
+                    left: '0px',
+                    top: '-0px'
+                }, 500);
+            }
+            if (e.progress == 1) {
+                  $(".mapWrap.lazy").animate({
+                    left: '-1000px',
+                    top: '-1000px'
+                }, 500);  
+            }
         });
 
-
-        new ScrollMagic.Scene({triggerElement: '#fadein-trigger'})
-            .setTween('#fadein-trigger', .500, {x: 400})
-            .addTo(controller);
-
-        /*new ScrollMagic.Scene({
-                triggerElement: '#trigger'
-            })
-            .setTween('#fadein-trigger', .500, {
-                x: 0
-            })
-            .addTo(controller);*/
-    </script>
+    /*new ScrollMagic.Scene({
+            triggerElement: '#trigger'
+        })
+        .setTween('#fadein-trigger', .500, {
+            x: 0
+        })
+        .addTo(controller);*/
+</script>
 
 
 </html>
