@@ -21,7 +21,6 @@
     <meta property="og:image:width" content="610" />
     <meta property="og:image:height" content="319" />
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!--<script type="text/javascript" src="http://static.joins.com/joongang_15re/scripts/lib/jquery/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="http://static.joins.com/joongang_15re/scripts/utils/jquery.utils.js"></script>
     <script type="text/javascript" src="http://static.joins.com/joongang_15re/scripts/utils/utils.js"></script>
@@ -41,13 +40,11 @@
     <link rel="stylesheet" type="text/css" href="common.css" />
     <link rel="stylesheet" type="text/css" href="myPage.css" />
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/animation.gsap.js"></script>
-
-
-
-
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 </head>
 
@@ -61,12 +58,8 @@
         opacity: 1;
         scale: 0px;
     }
+
 </style>
-
-
-
-
-
 
 
 <body>
@@ -91,32 +84,25 @@
             <div class="main">
                 <div class="bg_after"></div>
                 <div class="bg_layer"></div>
-
                 <div class="center_wrap">
-                    <h1 class="pc_item title"><img src="images/title/title1.png" alt="마의 고속도로 데이터로 찾아낸 사고다발 구간 18"></h1>
-                    <h1 class="m_item title"><img src="images/title/title1.png" alt="마의 고속도로 데이터로 찾아낸 사고다발 구간 18"></h1>
+                    <h1 class="pc_item title">밥대신생선?<br>“매일 300g 먹게 하라” 수산업 키우는 김정은</h1>
+                    <h1 class="m_item title">밥대신생선?<br>“매일 300g 먹게 하라” 수산업 키우는 김정은</h1>
                 </div>
-
                 <div class="arr_down">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" xml:space="preserve">
 						<title>스크롤하세요.</title>
 						<path xmlns="http://www.w3.org/2000/svg" fill="#fff" d="M5.3 8L3 10.1l9.3 9.3 9.4-9.3L19.4 8l-7.1 7z"/>
 					</svg>
                 </div>
-
             </div>
-
-
             <div class="contentWrap intro game">
                 <div class="text_wrap game">
-                    <canvas id="cv" width="800" height="480"></canvas>
                     <script src="game.js" charset="utf-8"></script>
-
+                    <canvas id="cv" width="700" height="480"></canvas>
                     <body onload="StartGame();"></body>
                 </div>
 
             </div>
-
             <div class="contentWrap line1">
                 <div class="textArea">
                     <div class="section">
@@ -127,19 +113,16 @@
                             </div>
                             <div class="scont">
                                 <div class="scont_section">
-
                                     <h4>잇따른 수산 사업소 방문</h4>
                                     <p>수산분야에 쏠린 김정은의 관심은 지난 17일자 노동신문 지면에서 확인됩니다. 김정은 노동 당 위원장은 황병서 북한군 총정치국장 등 최측근을 데리고 군부가 운영하는 ‘5월27일 수산 사업소’와 ‘1월8일 수산사업소’를 연이어 방문했는데요. 그는 “최근 며칠 사이 수천t의 도루 메기(도루묵)를 잡았다는 희한한 물고기 대풍소식을 듣고 인민들에게 한시바삐 전하고 싶어 만사를 제쳐놓고 찾아왔다”고 말했죠. 하루 6개면을 발행하는 노동신문은 첫 페이지부터 4 개면 전면을 수산사업소 방문 소식으로 도배하다시피했는데요. 무려 32장의 김정은 방문 사 진이 함께 편집됐습니다. 최순실 국정농단 사태로 한국의 내부 정세가 어수선하고, 미 대선 에서 도널드 트럼프 후보가 당선된 빅 이슈들이 모두 밀려버린 듯한 형국입니다.</p>
-                                    <figure>
-                                        <img src="http://pds.joins.com/news/component/htmlphoto_mmdata/201611/22/htm_2016112213825199262.jpg" id="fadein-trigger">
-                                        <figcaption>김정은 북한 노동당 위원장이 이달 중순 동해안 지역의 5월27일수산사업소와 1월8일수산사업소를 방문해 수천t의 도루묵을 살펴보고 있다. <small>[사진 노동신문]</small></figcaption>
+                                    <figure id="first_pic_trigger">
+                                        <figcaption >김정은 북한 노동당 위원장이 이달 중순 동해안 지역의 5월27일수산사업소와 1월8일수산사업소를 방문해 수천t의 도루묵을 살펴보고 있다. <small >[사진 노동신문]</small></figcaption>
                                     </figure>
-                                    <p class="tip_text"> “비린내를 맡으니 기분이 상쾌해진다” (조선중앙통신이 20일 전한 내용)</p>
+                                    <p class="tip_text"  > “비린내를 맡으니 기분이 상쾌해진다” (조선중앙통신이 20일 전한 내용)</p>
 
                                     <p class="tip_text">“최근 며칠 사이 수천t의 도루메기(도루묵)를 잡았다는 희한한 물고기 대풍소식을 듣고 인 민들에게 한시바삐 전하고 싶어만사를 제쳐놓고 찾아왔다” (노동신문 4개면 전면을 해당 내 용으로 도배)</p>
 
-                                    <p class="tip_text" id="fadeout-trigger">“저장고마다 명년도 9월까지 공급할 물고기가 산더미같이 쌓여있는 것을 보니 기분이 좋 고 쌓였던 피로가 말끔히 가셔진다”</p>
-
+                                    <p class="tip_text">“저장고마다 명년도 9월까지 공급할 물고기가 산더미같이 쌓여있는 것을 보니 기분이 좋 고 쌓였던 피로가 말끔히 가셔진다”</p>
                                 </div>
 
                                 <div class="scont_section">
@@ -147,12 +130,12 @@
                                     <h4>북한 수재민에게 물고기 선물</h4>
                                     <p>물고기에 대한 김정은의 이런 애착은 북한 수재민들에게까지 번졌다고 하는데요. 지난 8월 말~9월 초 함경북도 두만강 유역을 휩쓴 대재앙으로 집과 가재도구를 잃은 주민들에게 생 선 선물이라니 좀 뜬금없긴 합니다. 북한 매체들은 “북부지역 인민들이 은정어린 물고기를 눈물겹게 받아안았다”며 “평양 하늘가를 우러러 목청껏 만세를 불렀다”고 선전하고 있습니 다. 정보 당국 관계자는 “선물로 전달된 냉동 수산물 대부분이 장마당에 되팔린 것으로 파 악됐다”며 “피해 주민의 필요보다 김정은의 과시욕이 작용한 때문”이라고 귀띔합니다. </p>
                                     <figure>
-                                        <img src="http://pds.joins.com/news/component/htmlphoto_mmdata/201611/22/htm_2016112213825626495.jpg">
+                                        <img src="http://pds.joins.com/news/component/htmlphoto_mmdata/201611/22/htm_2016112213825626495.jpg" id="first_pic_trigger_out">
                                         <figcaption>구영서짱짱 <small>[구영서짱]</small></figcaption>
                                     </figure>
 
                                     <p class="tip_text">“북부지역 인민들이 은정어린 물고기를 눈물겹게 받아안았다”며 “평양 하늘가를 우러러 목청껏 만세를 불렀다”고 선전 (북한 매체)</p>
-                                    <p class="tip_text">“선물로 전달된 냉동 수산물 대부분이 장마당에 되팔린 것으로 파악됐다”며 “피해 주민의 필요보다 김정은의 과시욕이 작용한 때문”이라고 귀띔 (우리 정보당국 관계자)</p>
+                                    <p class="tip_text" id="fadeout-trigger">“선물로 전달된 냉동 수산물 대부분이 장마당에 되팔린 것으로 파악됐다”며 “피해 주민의 필요보다 김정은의 과시욕이 작용한 때문”이라고 귀띔 (우리 정보당국 관계자)</p>
 
                                 </div>
 
@@ -201,7 +184,6 @@
                                 <!--<span class="hash">#직선도로 #과속 #승용차</span>-->
                             </div>
                             <div class="scont">
-
                                 <div class="scont_section">
                                     <h4>민간 수산업 부문에 대한 불신</h4>
                                     <p>김정은 위원장은 집권 이듬해인 2013년 12월 평양에서 수산부문 열성자회의를 열어 어업 증대의 시동을 걸었습니다. 이듬해 1월 새해 첫 공개활동으로 군부대 수산물 냉동시설을 방 문했는데요. 눈길을 끄는 건 민간 어업부문에 대한 강한 불신감을 드러낸 대목입니다. 그는 “군대 수산사업소와 사회 사업소의 어업실적이 큰 차이가 나는 건 경제부문 일꾼들이 조건 타발(불만을 토로함)을 앞세우기 때문”이라고 질책했는데요. ‘믿을 건 군부 뿐’이라는 생각이 김정은의 머릿 속을 지배하고 있다는 걸 보여주는 듯합니다. </p>
@@ -225,67 +207,79 @@
 
                                     <p class="tip_text">“어로공들이 잡아내고 있는 한 마리 한 마리 물고기는 포탄 한발, 총탄 한 발과 같다.” (2014년 12월 27일 군 수산부문 공로자 표창)</p>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="mapArea">
                     <div class="mapWrap lazy">
-                        <div class="list_content">
-                            <!-- 1.수도권 경부선-->
-                            <div class="country part_1">
-                                <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_01.png" alt="">
-                                <div class="info_tooltip no_1 act_0"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_01_1.png" alt=""></div>
-                                <div class="info_tooltip no_2 act_1"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_01_2.png" alt=""></div>
-                                <div class="info_tooltip no_3 act_2"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_01_3.png" alt=""></div>
-                            </div>
-                            <!-- 2.남해선-->
-                            <div class="country part_2">
-                                <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_02.png" alt="">
-                                <div class="info_tooltip no_3 act_3"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_02_3.png" alt=""></div>
-                                <div class="info_tooltip no_1 act_4"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_02_1.png" alt=""></div>
-                                <div class="info_tooltip no_2 act_5"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_02_2.png" alt=""></div>
-                            </div>
-                            <!-- 3.천안청주-->
-                            <div class="country part_3">
-                                <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_03.png" alt="">
-                                <div class="info_tooltip no_1 act_6"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_03_1.png" alt=""></div>
-                                <div class="info_tooltip no_2 act_7"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_03_2.png" alt=""></div>
-                                <div class="info_tooltip no_3 act_8"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_03_3.png" alt=""></div>
-                                <div class="info_tooltip no_4 act_9"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_03_4.png" alt=""></div>
-                            </div>
-                            <!-- 4.경기인천-->
-                            <div class="country part_4">
-                                <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04.png" alt="">
-                                <div class="info_tooltip no_2 act_10"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04_2.png" alt=""></div>
-                                <div class="info_tooltip no_1 act_11"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04_1.png" alt=""></div>
-                                <div class="info_tooltip no_3 act_12"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04_3.png" alt=""></div>
-                                <div class="info_tooltip no_4 act_12"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04_4.png" alt=""></div>
-                                <div class="info_tooltip no_5 act_13"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04_5.png" alt=""></div>
-                            </div>
-                            <!-- 5.대구울산 -->
-                            <div class="country part_5">
-                                <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_05.png" alt="">
-                                <div class="info_tooltip no_1 act_14"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_05_1.png" alt=""></div>
-                                <div class="info_tooltip no_2 act_15"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_05_2.png" alt=""></div>
-                                <div class="info_tooltip no_3 act_16"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_05_3.png" alt=""></div>
-                            </div>
-                            <!-- 6.강원도 영동선 번외-->
-                            <div class="country part_6">
-                                <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_06.png" alt="">
-                                <div class="info_tooltip no_1 act_17"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_06_1.png" alt=""></div>
-                                <div class="info_tooltip no_2 act_17"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_06_2.png" alt=""></div>
-                                <!--<div class="info_tooltip no_3"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_06_3.png" alt=""></div>-->
-                            </div>
+                    <div class="list_content">
+                        <!-- 1.수도권 경부선-->
+                        <div id="chart1" style="position: absolute" ></div>
+                        <img src="http://pds.joins.com/news/component/htmlphoto_mmdata/201611/22/htm_2016112213825199262.jpg" id="first_pic" style = " position: absolute">
+                        <table class="chart" style = " position: absolute">
+                            <tr>
+                                <td>
+                                    <div id="chart2_1" style="border: 1px solid #ccc; width: 500px; height: 500px;"></div>
+                                </td>
+                                <td>
+                                    <div id="chart2_2" style="border: 1px solid #ccc; width: 300px; height: 300px;"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="country part_1">
+                            <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_01.png" alt="">
+                            <div class="info_tooltip no_1 act_0"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_01_1.png" alt=""></div>
+                            <div class="info_tooltip no_2 act_1"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_01_2.png" alt=""></div>
+                            <div class="info_tooltip no_3 act_2"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_01_3.png" alt=""></div>
                         </div>
+                        <!-- 2.남해선-->
+                        <div class="country part_2">
+                            <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_02.png" alt="">
+                            <div class="info_tooltip no_3 act_3"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_02_3.png" alt=""></div>
+                            <div class="info_tooltip no_1 act_4"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_02_1.png" alt=""></div>
+                            <div class="info_tooltip no_2 act_5"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_02_2.png" alt=""></div>
+                        </div>
+                        <!-- 3.천안청주-->
+                        <div class="country part_3">
+                            <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_03.png" alt="">
+                            <div class="info_tooltip no_1 act_6"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_03_1.png" alt=""></div>
+                            <div class="info_tooltip no_2 act_7"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_03_2.png" alt=""></div>
+                            <div class="info_tooltip no_3 act_8"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_03_3.png" alt=""></div>
+                            <div class="info_tooltip no_4 act_9"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_03_4.png" alt=""></div>
+                        </div>
+                        <!-- 4.경기인천-->
+                        <div class="country part_4">
+                            <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04.png" alt="">
+                            <div class="info_tooltip no_2 act_10"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04_2.png" alt=""></div>
+                            <div class="info_tooltip no_1 act_11"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04_1.png" alt=""></div>
+                            <div class="info_tooltip no_3 act_12"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04_3.png" alt=""></div>
+                            <div class="info_tooltip no_4 act_12"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04_4.png" alt=""></div>
+                            <div class="info_tooltip no_5 act_13"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_04_5.png" alt=""></div>
+                        </div>
+                        <!-- 5.대구울산 -->
+                        <div class="country part_5">
+                            <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_05.png" alt="">
+                            <div class="info_tooltip no_1 act_14"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_05_1.png" alt=""></div>
+                            <div class="info_tooltip no_2 act_15"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_05_2.png" alt=""></div>
+                            <div class="info_tooltip no_3 act_16"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_05_3.png" alt=""></div>
+                        </div>
+                        <!-- 6.강원도 영동선 번외-->
+                        <div class="country part_6">
+                            <img class="road_line" src="http://images.joins.com/newsroom/2017/0713_highway/line/line_06.png" alt="">
+                            <div class="info_tooltip no_1 act_17"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_06_1.png" alt=""></div>
+                            <div class="info_tooltip no_2 act_17"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_06_2.png" alt=""></div>
+                            <!--<div class="info_tooltip no_3"><img src="http://images.joins.com/newsroom/2017/0713_highway/line/line_06_3.png" alt=""></div>-->
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
+
+
     <div class="byline_wrap">
         <div class="byline">
             <p class="publish">발행일 : 2017.06.01 구영서 생일</p>
@@ -314,100 +308,8 @@
         </div>
     </div>
 
-
 </body>
 
-
-
-
-
-
-
-
-
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        $(".mapWrap.lazy").click(function() {
-            $(".mapWrap.lazy").animate({
-                left: '-500px',
-                top: '-500px'
-            }, 500);
-
-        });
-    });
-
-
-    new ScrollMagic.Scene({
-            triggerElement: '#fadein-trigger'
-        })
-        .setTween('#fadein-trigger', .500, {
-            x: 400
-        })
-        .addTo(controller);
-
-    new ScrollMagic.Scene({
-            triggerElement: "#fadeout-trigger",
-            duration: 200
-        })
-        .addTo(controller)
-        .addIndicators() // add indicators (requires plugin)
-        .on("update", function(e) {
-            //$("#scrollDirection").text(e.target.controller().info("scrollDirection"));
-        })
-        .on("enter leave", function(e) {
-            if (e.type == "enter") {
-
-            }
-
-        })
-        .on("start end", function(e) {
-        //console.log(e.type);
-            /*$("#lastHit").text(e.type == "start" ? "top" : "bottom");
-            if (e.type == "end") {
-                $(".mapWrap.lazy").animate({
-                    left: '-500px',
-                    top: '-500px'
-                }, 500);
-            }*/
-       /* if (e.type == "start") {
-                $(".mapWrap.lazy").animate({
-                    left: '-500px',
-                    top: '-500px'
-                }, 500);
-            }
-        else{
-            $(".mapWrap.lazy").animate({
-                    left: '0px',
-                    top: '0px'
-                }, 500);
-        }*/
-        })
-        .on("progress", function(e) {
-        
-           // $("#progress").text(e.progress.toFixed(3));
-            if (e.progress  == 0) {
-                $(".mapWrap.lazy").animate({
-                    left: '0px',
-                    top: '-0px'
-                }, 500);
-            }
-            if (e.progress == 1) {
-                  $(".mapWrap.lazy").animate({
-                    left: '-1000px',
-                    top: '-1000px'
-                }, 500);  
-            }
-        });
-
-    /*new ScrollMagic.Scene({
-            triggerElement: '#trigger'
-        })
-        .setTween('#fadein-trigger', .500, {
-            x: 0
-        })
-        .addTo(controller);*/
-</script>
-
+<script src="myPage.js" charset="utf-8"></script>
 
 </html>

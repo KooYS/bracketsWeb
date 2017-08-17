@@ -25,8 +25,6 @@ var once2 = true;
 var heroInterval;
 
 function StartGame() {
-
-
     Menu.init();
     Menu.start();
     // 
@@ -194,7 +192,7 @@ var Menu = {
             var rect = document.getElementById("cv").getBoundingClientRect();
             var canvaslocalX = e.clientX - rect.left;
             var canvaslocalY = e.clientY - rect.top;
-    
+            
             if (canvaslocalX < MenuButton.x || canvaslocalX > MenuButton.x + MenuButton.width || canvaslocalY < MenuButton.y || canvaslocalY > MenuButton.y + MenuButton.height)
                 return;
             
