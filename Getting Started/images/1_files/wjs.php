@@ -1,2 +1,0 @@
-
-document.write('<script  src=\'http://compass.adop.cc/assets/js/adop/adop.js?v=14\' ></script><ins class=\'adsbyadop\' _adop_zon = \'03e70f71-e262-4918-9ec5-bc7a1387443b\' _adop_type = \'js\' style=\'display:inline-block;width:300px;height:250px;\' _page_url=\'\'></ins>');
