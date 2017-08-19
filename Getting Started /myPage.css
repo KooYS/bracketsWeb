@@ -243,11 +243,19 @@ line-height: 100%;
 #wrap #contentArea .textArea div.section .scont>p:first-child {
     padding-top: 45px
 }
+#wrap #contentArea .textArea div.section .scont .scont_line {
+     width: auto;
+        border-bottom: 1px solid #bcbcbc;
+        margin: 20px 48px;
+}
 
 #wrap #contentArea .textArea div.section .scont .scont_section {    /*섹션*/
     margin: 60px 0px;
         padding : 10 0 0 0;
+     
+    
 }
+
 
 #wrap #contentArea .textArea div.section .scont .scont_section h4 {
   color: #004158;
@@ -260,7 +268,8 @@ line-height: 100%;
 }
 
 #wrap #contentArea .textArea div.section .scont .scont_section p {
-    margin: .3em 0 1em
+    margin: 0 0 20px 20px;
+    font-size: 16px;
 }
 
 #wrap #contentArea .textArea div.section .scont .scont_section p.tip_text {
@@ -268,7 +277,7 @@ line-height: 100%;
     margin: .1em 0 1em;
     font-style: italic;
     color: #2469d0;
-    font-size: 15px;
+    font-size: 16px;
     letter-spacing: -.5px
 }
 
@@ -284,9 +293,9 @@ line-height: 100%;
     position: fixed;
     top: 34px;
     right: 0;
-    width: calc(100% - 700px);
+    width: calc(100% - 780px);
     height: calc(100% - 34px);
-    background: #e3e3e3;
+    background: #ffffff;
     overflow: hidden
 }
 
@@ -313,29 +322,21 @@ line-height: 100%;
     position: absolute;
     top: 0%;
     left:0%;
-    width: 2500px;
-    height: 3139px;
-    background: url(map.jpg) center top no-repeat; //map
-    background-size: 100%;
-    -webkit-transform: translate(-50% -50%);
-    -moz-transform: translate(-50% -50%);
-    -ms-transform: translate(-50% -50%);
-    -o-transform: translate(-50% -50%);
-    transform: translate(-50% -50%)
+   
 }
 
 
 #wrap .main {                /*메인 화면*/
     position: relative;
     overflow: hidden;
-    height: 100vh;
+    height: 540px;
     background: #000;
     z-index: 1;
     -webkit-transition: all .5s ease-in-out;
     -moz-transition: all .5s ease-in-out;
     -o-transition: all .5s ease-in-out;
     -ms-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out
+    transition: all .5s ease-in-out;
 }
 
 #wrap .main .arr_down {        /*화살*/
@@ -354,7 +355,6 @@ line-height: 100%;
     opacity: 0;
     -webkit-opacity: 0;
     -moz-opacity: 0;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=(0))
 }
 
 #wrap .main .arr_down svg {
@@ -370,25 +370,16 @@ line-height: 100%;
     animation: arrow 2s ease infinite
 }
 
-#wrap .main .bg_after,
-#wrap .main .bg_layer {    
+#wrap .main .bg_after{    
+    background: url(background3.jpg) top center no-repeat;
     position: absolute;
     left: 0;
-    top: 0;
+    top: 34px;
     width: 100%;
     height: 100%;
     z-index: 1
 }
 
-#wrap .main .bg_after {
-    background: url(background.jpg) center no-repeat;
-    -webkit-animation: show 4s ease-in-out;
-    -moz-animation: show 4s ease-in-out;
-    -ms-animation: show 4s ease-in-out;
-    -o-animation: show 4s ease-in-out;
-    animation: show 4s ease-in-out;
-    animation-fill-mode: forwards
-}
 
 @-webkit-keyframes show {    
     0% {
@@ -487,7 +478,7 @@ line-height: 100%;
 
 @media only screen and (max-width:768px) {   /* 모바일*/
     #wrap .main .bg_after {
-        background: url(background2.jpg) top center no-repeat;
+        background: url(background3.jpg) top center no-repeat;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -496,15 +487,6 @@ line-height: 100%;
     }
 }
 
-#wrap .main .bg_layer {
-    background: url(background2.jpg) center no-repeat;
-    -webkit-animation: layer 4s ease-in-out;
-    -moz-animation: layer 4s ease-in-out;
-    -ms-animation: layer 4s ease-in-out;
-    -o-animation: layer 4s ease-in-out;
-    animation: layer 4s ease-in-out;
-    animation-fill-mode: forwards
-}
 
 
 @-webkit-keyframes layer {
@@ -592,33 +574,15 @@ line-height: 100%;
     }
 }
 
-@media only screen and (min-width:2000px) {
-    #wrap .main .bg_layer {
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        -ms-background-size: cover;
-        background-size: cover
-    }
-}
-
 #wrap .main h1 {                /*제목*/
     position: relative;
     font-size: 48px;
-    z-index: 100;
-    padding-top: 33.33333333vh
+    z-index: 1;
+    padding-top: 22.33333333vh
 }
 
 
 @media only screen and (max-width:768px) { /*모바일*/
-    #wrap .main .bg_layer {
-        background: url() top left no-repeat;
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        -ms-background-size: cover;
-        background-size: cover
-    }
     #wrap .main h1 {
         padding-top: 28.57142857vh;
         width: 250px;
