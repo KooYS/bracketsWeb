@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Interactive style block at bottom of body to reduce chance of truncation by email clients -->
+
+</head>
+<body>
+
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr><td align="center">
+
+<div class="header" style="font-family:Helvetica,Arial;font-size:30px;padding:10px;">Quiz</div>
+
+
+<!-- Form tag required for Samsung -->
+<form>
+<!--[if !mso]><!-- -->
+<!-- remove "checked from cbox-support to see fallback content in regular browser -->
+<input type="checkbox" class="cbox-support" style="display:none" checked>
+<input name="option" type="radio" id=initPage style="display:none" checked>
+<input name="option" type="radio" id=start style="display:none">
+<input name="option" type=radio id=no style="display:none">
+<input name="option" type=radio id=yes style="display:none">
+<input name="option" type=radio id=q-2 style="display:none">
+<input name="option" type=radio id=cbox-3a style="display:none">
+<input name="option" type=radio id=cbox-3b style="display:none">
+<!--<![endif]-->
+
+<div class="content-wrapper">
+
+
+<!-- FALLBACK -->
+  <div class="fallback">
+    <table width="100%"><tr><td style="font-family:Helvetica,Arial;font-size:30px;padding:100px 20px;background-color:#dddddd;" align=center>
+    Fallback content
+    </td></tr></table>
+  </div>
+<!-- end of FALLBACK -->
+
+
+<!-- INTERACTIVE/KINETIC -->
+  <!--[if !mso]><!-- -->
+  <div class="interactive" style="display:none;max-height:0;overflow:hidden;">  
+  <div class="page-container">
+      
+    <div class="page no">
+      오답<BR><BR>
+    <p>t블라브랮도개ㅑㅈ도새ㅑㅗㅈㄷ샤ㅐ</p>
+    <label class="ibutton" for="q-2">Next</label>
+    </div>
+          
+    <div class="page yes" >
+      정답<BR><BR>
+    <p>t블라브랮도개ㅑㅈ도새ㅑㅗㅈㄷ샤ㅐ</p>
+    <label class="ibutton" for="q-2">Next</label>
+    </div>
+        
+    <div class="page page0">
+      시작하기<BR><BR>
+      <label class="ibutton" for="start">Start</label>
+    </div>
+          
+          
+    <div class="page page1">
+      산 배경?<BR><BR>
+    
+      <label class="ibutton image" for="yes" style="background-image: url(background.jpg)"></label>
+      <label class="ibutton image" for="no"  style="background-image: url(background2.jpg)"></label>
+      <label class="ibutton image" for="no" style="background-image: url(background3.jpg)"></label>
+      <label class="ibutton image" for="no" style="background-image: url(background2.jpg)"></label>
+    </div>
+        
+        
+    <div class="page page2">
+      내 이름은?<BR><BR>
+      <label class="ibutton choice" for="yes" onClick="javascript:self.location='index4.html';">구영서</label>
+      <label class="ibutton choice" for="no">홍길동</label>
+      <label class="ibutton choice" for="no">뽀큐</label>
+      <label class="ibutton choice" for="no">뽀큐뽀큐</label>
+    </div>
+
+    <div class="page page3a">
+      Page 3a<BR><BR>
+      <b>You picked Option A</b><BR><BR>
+      <label class="ibutton reset" for="cbox-2">Go back</label>
+      <label class="ibutton reset" for="start">Start again</label>
+    </div>
+
+    <div class="page page3b">
+      Page 3b<BR><BR>
+      <b>You picked Option B</b><BR><BR>
+      <label class="ibutton reset" for="cbox-2">Go back</label>
+      <label class="ibutton reset" for="start">Start again</label>
+    </div>
+
+  </div>
+  </div>
+  <!--<![endif]-->
+<!-- End of Interactive/Kinetic -->
+
+</div> <!-- end of content wrapper -->
+
+</form>
+
+</td></tr></table>
+
+
+<!-- 
+ Media query to test interactive capability
+ Remove the first style block from web version.
+-->
+<style>
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .cbox-support:checked ~ div .fallback {
+        display:none;
+    }
+    .cbox-support:checked ~ div .interactive{
+        display:block!important;
+        max-height:none!important;
+    }
+    /* 
+    Selective blocking for non supported clients.
+    - AOL does not support the for="" attribute in labels
+    */
+    input[class~="aolmail_cbox-support"]:checked ~ div .fallback{ 
+      display:block!important; 
+    }
+    input[class~="aolmail_cbox-support"]:checked ~ div .interactive{
+      display:none !important;
+    }
+  }
+</style>
+
+<!-- Keep this style block in web version -->
+<style>
+  input{
+    display:none;
+  }
+  .content-wrapper{
+    font-family: Helvetica, Arial, sans-serif;
+    font-size:30px;
+  }
+
+  .ibutton{
+    background-color:#d9534f;
+    color:#ffffff;
+    cursor:pointer;
+    display:inline-block;
+    margin:20px 20px;
+    padding:10px 20px;
+    border-radius:5px;
+  }
+.ibutton.image{
+     background-repeat: no-repeat;
+    background-size: cover;
+    color:#ffffff;
+    width: auto;
+    cursor:pointer;
+    display:inline-block;
+    margin:20px 20px;
+    padding:100px 100px;
+    border-radius:5px;
+  }
+    .ibutton.choice{
+    background-color:#d9534f;
+    width: 40%;
+    color:#ffffff;
+    cursor:pointer;
+    display:inline-block;
+    margin:20px 20px;
+    padding:20px 20px;
+    border-radius:5px;
+  }
+  .ibutton.reset{
+    background-color:#ffffff;
+    color:#555555;
+    border:2px solid #555555;
+  }
+  .interactive{
+    position:relative;
+  }
+  .page-container{
+    padding:100px 20px;  
+    background-color:#dddddd;
+  }
+  .page{
+    text-align:center;
+    overflow:hidden;
+    max-height:0px;
+  }
+
+  #start:checked ~ * .interactive .page1,
+  #no:checked ~ * .interactive .no,
+  #yes:checked ~ * .interactive .yes,
+  #q-2:checked ~ * .interactive .page2,
+  #cbox-3a:checked ~ * .interactive .page3a,
+  #cbox-3b:checked ~ * .interactive .page3b{
+    max-height:none;
+    -webkit-animation: fadein 0.5s linear;
+    animation: fadein 0.5s linear;
+  }
+  #start:not(:checked) ~ * .interactive .page1,
+  #no:not(:checked) ~ * .interactive .no,
+  #yes:not(:checked) ~ * .interactive .yes,
+  #q-2:not(:checked) ~ * .interactive .page2,
+  #cbox-3a:not(:checked) ~ * .interactive .page3a,
+  #cbox-3b:not(:checked) ~ * .interactive .page3b{
+    max-height:0px;
+    -webkit-animation: fadeout 0.5s linear;
+    animation: fadeout 0.5s linear;
+  }
+ 
+    
+    
+  #initPage:checked ~ * .interactive .page{
+    height:0px;
+  }
+
+  #initPage:checked ~ * .interactive .page0{  /*시작페이지*/
+    max-height:none;
+    animation:none;
+    height:auto;
+  }
+
+  @-webkit-keyframes fadein{
+    0%,49%{ opacity:0; max-height:0px;}
+    50%{ opacity:0; max-height:none;}
+    100%{ opacity:1; max-height:none;}
+  }
+  @keyframes fadein{
+    0%,49%{ opacity:0; max-height:0px;}
+    50%{ opacity:0; max-height:none;}
+    100%{ opacity:1; max-height:none;}
+  }
+  @-webkit-keyframes fadeout{
+    0%{ opacity:1; max-height:none;}
+    49%{ opacity:0; max-height:none;}
+    50%,100%{ opacity:0; max-height:0px;}
+  }
+  @keyframes fadeout{
+    0%{ opacity:1; max-height:none;}
+    49%{ opacity:0; max-height:none;}
+    50%,100%{ opacity:0; max-height:0px;}
+  }
+
+</style>
+</body>
+</html>

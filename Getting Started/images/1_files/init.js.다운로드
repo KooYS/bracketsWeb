@@ -1,0 +1,975 @@
+﻿/**
+* init.js
+* @use : news.joins.com (Pc) 에서만 사용한다.
+*/
+(function(window, document, $) {
+
+    // Defind Area Variable.
+    var layout = window.layout,
+        nowDate = new Date(),
+        pageType = utils.config('pageType'),
+        articleType = utils.config('articleType'),
+        imagePath = utils.config('imagePath');
+
+    // datepicker configuration.
+    if($.datepicker !== undefined) {
+        $.datepicker.regional["ko"] = {
+            closeText: '닫기',
+            prevText: '이전달',
+            nextText: '다음달',
+            currentText: '오늘',
+            monthNames: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+            dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+            dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+            weekHeader: 'Wk',
+            dateFormat: 'yy.mm.dd',
+            firstDay: 0,
+            isRTL: false,
+            showMonthAfterYear: true,
+            yearSuffix: ".",
+            showAnim: 'drop',
+            buttonImageOnly: true
+
+        };
+        $.datepicker.setDefaults($.datepicker.regional['ko']);
+    }
+
+    // global init
+    // header(navigation), footer, right, get font cookie, config.
+    (function init() {
+
+        $('#content > div > ul.stock').remove();
+
+        var fontSize = utils.getCookie(COOKIE_NAMES.fontSize) || '4',
+            openWide = utils.getCookie(COOKIE_NAMES.wide),
+            windowSize = utils.windowSize();
+
+        layout.render();
+        if (pageType == PAGE_TYPE.article) {
+            initFontSize(fontSize);
+        }
+
+        // 와이드 오픈용 resize Handler. // 높이를 제외하고 width 만 체크한다. // IE8 에서 높이값이 고정되지 않는 버그 있음.(css).
+        $(window).resize(function () {
+
+            var _windowSize = utils.windowSize();
+
+            // IE 7, 8 에서 body 사이즈 변경될 때, window.resize 이벤트가 발생함.
+            // 내부 변수에 처음 size 를 cache 하여 추가 조건 작성.
+            if (windowSize.width != _windowSize.width) {
+
+                windowSize = utils.windowSize();
+                utils.removeCookie(COOKIE_NAMES.wide, COOKIE_CONDITION.path, COOKIE_CONDITION.domain);
+
+                if (_windowSize.width > 1390) {
+                    layout.wide.open();
+                } else {
+                    layout.wide.close();
+                }
+            }
+        });
+
+        $('.count .mg').each(function () {
+            var $count = $(this),
+                count = $count.text() || '';
+
+            count = utils.getDisplayCount(count);
+            $count.text(count);
+        });
+
+        // pc : Mobile 보기 전환
+        $(document.body).on('click', '#showMobileWeb', function () {
+            utils.setIgnoreUserAgent();
+            utils.redirectUrl();
+            return false;
+        });
+
+        // 이미지 inline 사이즈 제거
+        $('.html_photo_left img, .photo_center img').width('').height('');
+    })();
+
+    function initFontSize(fontSize) {
+
+        if(location.href.toLowerCase().indexOf('providednews') > -1) {
+            return;
+        }
+        var $changefont = $('#changefont');
+
+        $(DOM_SELECTOR.articleBody).removeClass('fs1 fs2 fs3 fs4 fs5').addClass('fs' + fontSize);
+        $('#changefont').changeFontSize().show();
+    }
+
+    utils.shareCountCallback = function(target) {
+        // 서비스별 카운트 처리.
+        var
+            TARGET_SELECTORS = {
+                news: '#article_share_total_count',
+                issue: '#issue_keyword_share_count'
+            },
+            targetSelector = TARGET_SELECTORS[target],
+            $totalCountArea = $(targetSelector),
+            totalCount = 0;
+
+        if(!targetSelector) {
+            return;
+        }
+        if($totalCountArea.length == 0) {
+            return;
+        }
+
+        totalCount = $totalCountArea.text() || 0;
+        totalCount = parseInt(totalCount, 10);
+        $totalCountArea.text(totalCount + 1);
+    };
+
+    // MVC Ajax : 클릭된 버튼 타겟.
+    var $moreBtn = null;
+    utils.setMoreBtn = function($btn) {
+        $moreBtn = $btn;
+    };
+
+    // MVC Ajax : mvcAjaxSuccess
+    utils.mvcAjaxSuccess = function() {
+
+        var articleType = utils.config('articleType');
+        var menuKey = utils.menu.getPageMenuKey();
+
+        setTimeout(function() {
+            $('#loading').hide();
+        }, 3000);
+
+        if(articleType = ARTICLE_TYPE.live) {
+            if($.fn.articleComponent) {
+            	$('#live_content').articleComponent();
+            	if (menuKey.toLowerCase().indexOf('election2017') !== -1) {
+            		$('.ab_photo').attr("style", "width:580px;");
+            	}
+            }
+        }
+
+        if($moreBtn == null || !$moreBtn.length) {
+            return false;
+        }
+
+        var data = $moreBtn.data();
+
+        if(data.totalCount <= data.currentPage * data.pageSize) {
+            $moreBtn.hide();
+        }
+
+        if($moreBtn && $moreBtn.length == 1) {
+            $moreBtn.data('active', 'true');
+            $moreBtn.removeClass('disable');
+        }
+
+        utils.mvcAjaxCallbackQueue.callback($moreBtn);
+    };
+
+
+    function trackingLogAd(types) {
+        var adsnMaps = {
+            'Home': '7528',
+            'Section': '7529',
+            'Article': '7531',
+            'Cover': '7540',
+            'Live': '7539',
+            'Piki': '7541',
+            'Money': '7542',
+            'Culture': '7543',
+            'Sports': '7544',
+            'JPlus': '7545',
+            'Travel': '7546',
+            'Week': '7547',
+            'Politics': '8169',
+            'Sunday': '9393',
+            'MagazineM': '9101',
+            'MagazineMArticle': '9102'
+        },
+        iframeUrls = 'http://dgate.opap.co.kr/imp/?ssn=566&adsn={ADSN}&cresn=5362';
+
+        if ($.isArray(types)) {
+            types.forEach(function (v, i, a) {
+                var urls = iframeUrls.replace('{ADSN}', adsnMaps[v]);
+
+                utils.createIFrame({ id: 'tracking_ad_' + v, url: urls });
+            });
+        } else {
+            var urls = iframeUrls.replace('{ADSN}', adsnMaps[types]);
+
+            utils.createIFrame({ id: 'tracking_ad_' + types, url: urls });
+        }
+    }
+
+    //document.ready
+    $(function ($) {
+        var menuKey = utils.menu.getPageMenuKey();
+
+        if (menuKey.toLowerCase().indexOf('sunday') !== -1) {
+        	trackingLogAd('Sunday');
+        }
+
+        if (pageType === PAGE_TYPE.article) {
+            utils.articleLogForSection && utils.articleLogForSection();
+
+            if (menuKey.toLowerCase().indexOf('sunday') !== -1) {
+            	trackingLogAd('Article');
+            } else if (menuKey.indexOf('Money') !== -1) {
+                trackingLogAd('Money');
+                $('#leftbanner2').loadAd({ type: 'left_915' });
+            } else if (menuKey.indexOf('JPlus') !== -1) {
+                trackingLogAd('JPlus');
+            } else if (menuKey.indexOf('Culture') !== -1) {
+                trackingLogAd('Culture');
+            } else if (menuKey.indexOf('Sports') !== -1 || menuKey.toLowerCase().indexOf('rio2016') !== -1) {
+                trackingLogAd('Sports');
+            } else if (menuKey.indexOf('Travel') !== -1) {
+                trackingLogAd('Week');
+            } else if (menuKey.indexOf('Politics') !== -1) {
+                trackingLogAd('Politics');
+            } else if (menuKey.indexOf('MagazineM') !== -1) {
+            	trackingLogAd('MagazineMArticle');
+            }
+
+            if (utils.config('articleType') === ARTICLE_TYPE.cover) {
+                trackingLogAd('Cover');
+            } else if (utils.config('articleType') === ARTICLE_TYPE.live) {
+                trackingLogAd('Live');
+            } else if (utils.config('articleType') === ARTICLE_TYPE.piki) {
+                trackingLogAd('Piki');
+            } else {
+                trackingLogAd('Article');
+            }
+        }
+
+        var bannerFoot = '<div class="ft"><button type="button">닫기</button></div>';
+        if (pageType == PAGE_TYPE.index) {
+            // 메인 광고 시 제외
+            if (typeof(isAdExNo) == "undefined" || (typeof(isAdExNo) != "undefined" && isAdExNo.indexOf("589") < 0)) {
+                $('#shapepopup').loadAd({
+                    type: 'shapepopup_589', onload: function ($widget) {
+                        $widget.append(bannerFoot);
+                        if ($widget.find('iframe').contents().find('body').height() == 0) {
+                            $widget.hide();
+                        }
+                    }
+                });
+            }
+            $('#promotionBanner_0').loadAd({ type: 'home_ci_820' });
+            $('#promotionBanner_1').loadAd({ type: 'home_ci_821' });
+            trackingLogAd(pageType);
+        }
+
+        if (pageType == PAGE_TYPE.index) {
+            // 메인 광고 시 제외
+            if (typeof (isAdExNo) == "undefined" || (typeof (isAdExNo) != "undefined" && isAdExNo.indexOf("592") < 0)) {
+                $('#leftbanner').loadAd({ type: 'left_592' }).show().append(bannerFoot);
+            }
+        }
+        else {
+            $('#leftbanner').loadAd({ type: 'left_593' }).show().append(bannerFoot);
+        }
+
+        if(pageType == PAGE_TYPE.index || pageType === PAGE_TYPE.list || pageType === PAGE_TYPE.unique || pageType === PAGE_TYPE.search) {
+            $('#eventBanner').loadAd({ type: 'home_ci_806' });
+        }
+
+        if (pageType == PAGE_TYPE.section) {
+            if (menuKey.split(',').length > 1 && menuKey.indexOf('JPlus') !== -1) {
+                trackingLogAd('JPlus');
+            } else {
+            	if (menuKey.toLowerCase().indexOf('sunday') !== -1) {
+            		trackingLogAd('Section');
+            	} else if (menuKey.indexOf('Money') !== -1) {
+                    trackingLogAd(['Section', 'Money']);
+                    $('#leftbanner2').loadAd({ type: 'left_915' });
+                } else if (menuKey.indexOf('Culture') !== -1) {
+                    trackingLogAd(['Section', 'Culture']);
+                } else if (menuKey.indexOf('Sports') !== -1) {
+                    trackingLogAd(['Section', 'Sports']);
+                } else if (menuKey.indexOf('Travel') !== -1) {
+                    trackingLogAd(['Section', 'Travel']);
+                } else if (menuKey.indexOf('Politics') !== -1) {
+                    trackingLogAd(['Section', 'Politics']);
+                }  else if (menuKey.indexOf('MagazineM') !== -1) {
+                	trackingLogAd(['Section', 'MagazineM']);
+				} else {
+                    trackingLogAd('Section');
+                }
+            }
+
+        	//정치 광고 type 동적으로 수정
+            if (utils.menu.getPageMenuKey().toLowerCase().indexOf('politics') !== -1) {
+            	$('div[data-widget-service="display_680"]').attr('data-widget-service', 'display_1056');
+            }
+        }
+
+        if (pageType === PAGE_TYPE.list) {
+        	if (menuKey.toLowerCase().indexOf('sunday') !== -1) {
+        		trackingLogAd('Section');
+        	} else if (menuKey.indexOf('Money') !== -1) {
+                trackingLogAd(['Section', 'Money']);
+                $('#leftbanner2').loadAd({ type: 'left_915' });
+            } else if (menuKey.indexOf('Culture') !== -1) {
+                trackingLogAd(['Section', 'Culture']);
+            } else if (menuKey.indexOf('Sports') !== -1 || menuKey.toLowerCase().indexOf('rio2016') !== -1) {
+                trackingLogAd(['Section', 'Sports']);
+            } else if (menuKey.indexOf('Travel') !== -1) {
+                trackingLogAd(['Section', 'Week']);
+            } else if (menuKey.indexOf('Politics') !== -1) {
+                trackingLogAd(['Section', 'Politics']);
+            } else if (menuKey.indexOf('MagazineM') !== -1) {
+            	trackingLogAd(['Section', 'MagazineM']);
+            } else {
+                trackingLogAd('Section');
+            }
+        }
+
+        // 부동산 섹션 좌측 120*600 광고 적용 
+        if (utils.menu.getPageMenuKey().toLowerCase().indexOf('realestate') !== -1 && (utils.config('pageType') === 'List')) {
+        	$('#wrap').prepend('<div class="ad_120_200 ad" id="leftbanner"></div><div id="leftbanner_realestate" class="ad_120_600 ad"></div>');
+        	$('#leftbanner').loadAd({ type: 'left_593' });
+            $('#leftbanner_realestate').loadAd({ type: 'left_915' });
+        }
+
+        if (pageType === PAGE_TYPE.unique) {
+            var adPage = ['Opinion', 'Cartoon', 'Issue', 'Time7', 'MyNews', 'Jebo', 'BrandNews', 'CustomerCenter', 'Section', 'Star', 'Pic', 'UsaDiscover', 'SatiricalCartoon'];
+
+            if (menuKey.indexOf('SatiricalCartoon') !== -1) {
+                trackingLogAd('Section');
+            }
+
+            if (menuKey.toLowerCase().indexOf('sunday') !== -1) {
+            	trackingLogAd('Section');
+            }
+            else if (menuKey.indexOf('Money') !== -1) {
+                $('#leftbanner2').loadAd({ type: 'left_915' });
+            }
+            else {
+                adPage.forEach(function (v, i, a) {
+                    if (menuKey.indexOf(v) !== -1) {
+                        if (v === 'UsaDiscover') {
+                            trackingLogAd(['Section', 'Week']);
+                        } else {
+                            trackingLogAd('Section');
+                        }
+                    }
+                });
+            }
+
+        	//반퇴시대 광고 type 동적으로 수정
+            if (utils.menu.getPageMenuKey().toLowerCase().indexOf('retirement') !== -1) {
+            	$('div[data-widget-service="display_680"]').attr('data-widget-service', 'display_1035');
+            }
+        }
+
+        // init Article Reporter
+        //$('.journalist_area').find('.profile a').reporterCard();  //리포터 레이어 뜨지 않고 리포터 페이지로 이동
+
+        if (pageType == PAGE_TYPE.article) {
+            //week& 광고 type 동적으로 수정
+            if(utils.menu.getPageMenuKey().toLowerCase().indexOf('travel') !== -1) {
+                $('div[data-widget-service="da_300"]').attr('data-widget-service', 'display_748');
+                $('#criteo_network').replaceWith('<div id="display_749" style="width:250px;height:250px;float:right;clear:both;"></div>');
+
+                $('#display_749').loadAd({type: 'display_749'});
+            // 부동산 섹션 좌측 120*600 광고 적용
+            } else if (utils.menu.getPageMenuKey().toLowerCase().indexOf('realestate') !== -1) {
+                $('#leftbanner').after('<div id="leftbanner_realestate" class="ad_120_600 ad"></div>');
+                $('#leftbanner_realestate').loadAd({ type: 'left_915' });
+            //선데이 광고 type 동적으로 수정
+            } else if (utils.menu.getPageMenuKey().toLowerCase().indexOf('sunday') !== -1) {
+            	$('div[data-widget-service="da_300"]').attr('data-widget-service', 'display_800');
+            } else if (utils.menu.getPageMenuKey().toLowerCase().indexOf('politics') !== -1) {
+            	$('div[data-widget-service="da_300"]').attr('data-widget-service', 'display_1056');
+            }
+
+            initArticle();
+
+            if(utils.config('articleType') !== ARTICLE_TYPE.cover) {
+                $('#leftbanner').loadAd({type: 'left_593'}).show().append(bannerFoot);
+                $('#shapepopup').loadAd({
+                    type: 'shapepopup_590',
+                    onload: function($widget) {
+
+                        $widget.append(bannerFoot);
+
+                        if($widget.find('iframe').contents().find('body').height() == 0) {
+                            $widget.hide();
+                        }
+                    }
+                });
+                $('#articeltopbanner').loadAd({type: 'shoppingbox_496'}).show().append(bannerFoot);
+                $('#articleBottomLeft').loadAd({type: 'bottom_513'}).show();
+                $('#articleBottomRight').loadAd({ type: 'bottom_514' }).show();
+            }
+        }
+
+
+
+        // MVC Ajax : 버튼 이벤트 선 처리.
+        $(document.body).on('click', 'a.btnMore', function() {
+
+            //utils.log('## btnMore click');
+
+            var $btn = $(this),
+                data = $btn.data(),
+                url = $btn.attr('href').split('?'),
+                pathname = url[0],
+                param = url[1],
+                href = '',
+                paramData = $.fn.deparam(param);
+
+            if(data.active == 'false') {
+                return false;
+            }
+            paramData.page = parseInt(data.currentPage, 10) + 1;
+            $btn.data({
+                'currentPage': paramData.page
+            });
+
+            if(data.url) {
+                href = decodeURIComponent(data.url).replace('{page}', paramData.page);
+            } else {
+                href = pathname + '?' + $.param(paramData);
+            }
+
+            //utils.log('');
+
+            $btn.attr({'href': href}).addClass('disable');
+            utils.setMoreBtn($btn);
+        });
+
+        // set paging_date
+        $('.paging_date').setPagingDate();
+
+        // set Search Form (s)
+
+        // set Search Form (e)
+
+        // set Tooltip
+        $('a.btnTooltip').on('mouseenter', function() {
+            var targetId = $(this).data('target'),
+                $target = $('#' + targetId);
+
+            if(!targetId) {
+                return false;
+            }
+            $target.show();
+            return false;
+        }).on('mouseleave', function() {
+            var targetId = $(this).data('target'),
+                $target = $('#' + targetId);
+
+            if(!targetId) {
+                return false;
+            }
+            $target.hide();
+            return false;
+        });
+
+        $("a.tab_button").on('click', function() {
+            var $ul = $(this).closest('ul');
+            $ul.children('li').attr('class', '');
+            var $li = $(this).parent();
+            $li.attr('class', 'on');
+        });
+
+        $('.share_wrap').sharePlate();
+
+        if ($('#sub').length > 0) {
+            $('#sub').widget();
+        }
+
+        $('#btnFollow').on('click', function() {
+            var $btn = $(this),
+                isFollow = $btn.data('isFollow') == true || $btn.data('isFollow') == 'True' ? true : false;
+
+            targetFollow($btn, $btn.data('id'), $btn.data('type'), isFollow);
+        });
+
+        $('.back_top > a').on('click', function() {
+            $(window).scrollTop(0);
+            return false;
+        });
+
+        $('#head').sticky({
+            top: (articleType == ARTICLE_TYPE.cover ? 460 : 136),
+            cls: 'fake_sticky',
+            callback: function($head) {
+                var $btn = $('.back_top > a');
+
+                if($head.hasClass('fake_sticky')) {
+                    $btn.show();
+                } else {
+                    $btn.hide();
+                }
+            }
+        });
+
+        $('#doc').find('div.ad').on('click', '.ft button', function() {
+            $(this).closest('.ad').hide();
+
+            return false;
+        });
+
+        //윈도우 로드 완료 후 페렐렉스 스크롤 실행되도록 수정
+        /*var WindowLoad = window.onload;
+        window.onload = function (e) {
+            if (typeof (WindowLoad) == "function") {
+                WindowLoad();
+            }
+            // Set Parallax Scroll
+            // Cover Article 을 제외한 전체 페이지에 적용.
+            if (utils.config('applicationType') == APPLICATION_TYPE.pc && articleType != ARTICLE_TYPE.cover && location.host.indexOf(utils.config('cmsHost')) == -1) {
+                //utils.log('$$$$$ Set Parallax Scroll');
+                $.parallaxScrolling && $.parallaxScrolling();
+            }
+        }*/
+        $(window).load(function () {
+            // Set Parallax Scroll
+            // Cover Article 을 제외한 전체 페이지에 적용.
+            if (utils.config('applicationType') == APPLICATION_TYPE.pc && articleType != ARTICLE_TYPE.cover && location.host.indexOf(utils.config('cmsHost')) == -1) {
+                //utils.log('$$$$$ Set Parallax Scroll');
+                $.parallaxScrolling && $.parallaxScrolling();
+            }
+        });
+
+        function initArticle() {
+
+            var totalId = utils.getTotalId();
+            var commentTotalId = $('#comment_total_id').val() || '';
+            var $articleBody = $('#article_body');
+            var sourceCode = utils.getArticleSourceCode();
+            var articleTitle = utils.getArticleTitle();
+            var isLoginContents = utils.getIsLoginContents();
+            // 클립보드 복사 이벤트 처리.
+            if ((sourceCode == '1') || (sourceCode == '3') || (sourceCode == 'd5')) {
+                if (document.addEventListener) {
+                    document.addEventListener("copy", fnCopyTextAdd, false);
+                } else if (document.attachEvent) {
+                    document.attachEvent("oncopy", fnCopyTextAdd);
+                }
+            }
+
+            function fnCopyTextAdd() {
+                var getSelection = window.getSelection ? window.getSelection() : document.selection;
+                var getRange = getSelection.getRangeAt ? getSelection.getRangeAt(0) : getSelection.createRange();
+                if (!getSelection.rangeCount) return null
+                var addText = "[출처: 중앙일보] " + articleTitle;
+                var addHtml = "<br /><br />" + addText;
+                var body = document.getElementsByTagName("body")[0];
+                var span = document.createElement("span");
+                span.appendChild(getRange.cloneContents());
+                if (span.innerHTML == "") return null;
+                var copytext = span.innerHTML + addHtml;
+                var addDiv = document.createElement("div");
+                body.appendChild(addDiv);
+                addDiv.innerHTML = copytext;
+                getSelection.selectAllChildren(addDiv);
+                window.setTimeout(function () {
+                    body.removeChild(addDiv);
+                    getSelection.removeAllRanges();
+                    getSelection.addRange(getRange);
+                }, 0);
+            }
+
+            resetAdCriteo();
+
+            $('img[data-src], img[data-origin]', '#body').setDefaultImage();
+
+            $('iframe[data-src]', '#body').each(function () {
+                var $iframe = $(this);
+
+                if (!$iframe.attr('src')) {
+                    $iframe.attr('src', $iframe.data('src'));
+                }
+            });
+
+            $('.tag_list').find('li').on('click', 'a', function() {
+                var $p = $(this).parent(),
+                    keyword = '';
+
+                //utils.log($p.hasClass('issue'));
+                if($p.hasClass('issue') === false) {
+                    keyword = $(this).text().replace('#', '');
+
+                    utils.saveSearchHistory(keyword);
+                }
+            });
+
+            // init Article Components
+            if ($.fn.articleComponent && (!isLoginContents || userInfo.isLogin())) {
+
+                $articleBody.articleSubTitle(); // 부제
+
+                var pageMenuKey = utils.menu.getPageMenuKey().toLowerCase();
+
+                if((articleType == ARTICLE_TYPE.general || articleType == ARTICLE_TYPE.cover) && pageMenuKey.indexOf('jplus') == -1 && !utils.getIsCartoon()) {
+                    //$articleBody.articleNewsflash(); // 속보
+                }
+
+                $articleBody.articleComponent();
+
+                if(pageMenuKey.indexOf('jplus') !== -1) {
+                    $articleBody.articleJplusRecentlyNews();
+                }
+            }
+
+            // init Article Bottom
+            if($.fn.articleBottom) {
+                $('#content').articleBottom();
+            }
+
+            $('.share_article a', '#content').setShareForArticle();
+
+            var headHeight = $('#head').height(),
+                headOffset = $('#head').offset();
+            // init Article sticky Menu (Only Article)
+            $('#head').sticky({
+                top: (articleType == ARTICLE_TYPE.cover ? 460 : 136 + headOffset.top),
+                callback: function($head) {
+
+                    var $body = $('#body'),
+                        bodyStyls = {'margin-top': ''};
+
+                    if($head.hasClass('sticky')) {
+                        layout.header.showSnsArea(true);
+                        layout.header.bindCloseSearchArea(); // 검색 폼 / sns 변경 처리 이벤트 bind
+                        $('.sns_wrap a', '#head').setShareForArticle(true);
+
+                        bodyStyls['margin-top'] = headHeight;
+                    } else {
+                        layout.header.showSearchArea(false);
+                        layout.header.unbindCloseSearchArea(); // 검색 폼 / sns 변경 처리 이벤트 unbind (검색폼 고정)
+                        $('.sns_wrap a', '#head').setShareForArticle(false);
+                    }
+
+                    $body.css(bodyStyls);
+                }
+            });
+
+            if(articleType == ARTICLE_TYPE.cover) {
+                $('#head').sticky({
+                    top: 260,
+                    cls: 'fixed_bg',
+                    callback: function($head) {
+                        if($head.hasClass('fixed_bg')) {
+                            $('#cover').addClass('fixed_bg');
+                        } else {
+                            $('#cover').removeClass('fixed_bg');
+                        }
+                    }
+                });
+            }
+
+            // init Article Comment
+            if (!commentTotalId.isEmpty() && $.fn.comment) {
+                $('#comment').comment({
+                    id: commentTotalId,
+                    page: 'article' //news, user
+                });
+            }
+
+            //프리미엄 기사일 경우 click 이벤트 예외 처리
+
+            if (isLoginContents && !userInfo.isLogin()) {
+                $('.btn_paper, #btnDislike, #btnLike, #btnPrint').on('click', function () {
+                    //프리미엄 기사일 경우 예외 처리
+                    if (isLoginContents) {
+                        alert('로그인을 해야 이용하실 수 있습니다.');
+                        return false;
+                    }
+                });
+
+                return false;
+            }
+            // set Article Print
+            $('#btnPrint').on('click', function () {
+                if(!totalId) {
+                    utils.error('not defined total_id', true);
+                    return false;
+                }
+
+                var windowSize = utils.windowSize();
+                var height = windowSize.height > 650 ? 650 : windowSize.height;
+                window.open('/article/print/' + totalId, 'print', 'directories=no,location=no,menubar=no,status=no,toolbar=no,scrollbars=yes,resizable=no,width=800,height=' + windowSize.height);
+            });
+
+            // set Article Scrap
+            $('#btnScrap').on('click', function() {
+            	//utils.log('## scrap');
+            	var userInfo = commentUserInfo.getInfo();
+            	if (userInfo.type === "joins") {
+            		articleScrap(totalId);
+            	} else {
+            		alert("기사 보관은 조인스 아이디로 로그인한 이용자만 이용 가능합니다.");
+            	}
+            });
+
+            // set Article Like
+            $('#btnLike').on('click', function () {
+                var $btn = $(this),
+                    count = $btn.find('.count').text(),
+                    url = utils.config('apiPath') + '/article/' + totalId + '/like';
+
+                if (totalId.length == 0) {
+                    return alert('요청을 처리중 오류가 발생했습니다.\n새로 고침 후, 다시 시도해주세요.');
+                }
+
+                count = parseInt(count, 10);
+                utils.ajaxPost({
+                    url: url,
+                    success: function (res) {
+                        if (res.IsSuccess) {
+                            //alert('좋아요를 선택하셨습니다.');
+                            $btn.find('.count').text(count + 1);
+                        } else {
+                            alert('이미 선택하셨습니다.');
+                        }
+                    }
+                });
+            });
+
+            // set Article Hate
+            $('#btnDislike').on('click', function() {
+
+                var $btn = $(this),
+                    count = $btn.find('.count').text(),
+                    url = utils.config('apiPath') + '/article/' + totalId + '/hate';
+
+                if(totalId.length == 0) {
+                    return alert('요청을 처리중 오류가 발생했습니다.\n새로 고침 후, 다시 시도해주세요.');
+                }
+
+                count = parseInt(count, 10);
+                utils.ajaxPost({
+                    url: url,
+                    success: function(res) {
+                        if(res.IsSuccess) {
+                            //alert('싫어요를 선택하셨습니다.');
+                            $btn.find('.count').text(count + 1);
+                        } else {
+                            alert('이미 선택하셨습니다.');
+                        }
+                    }
+                });
+            });
+
+            //$articleBody.on('resize_content', function () { utils.log('##font resize'); resetAdCriteo();});
+            //set criteo
+            function resetAdCriteo() {
+                // criteo_network 광고.
+                var isCulture = utils.menu.getPageMenuKey().toLowerCase().indexOf('culture') !== -1 ? true : false //문화 아티클일 경우 광고 타입이 변경됨
+
+                var isTravel = utils.menu.getPageMenuKey().toLowerCase().indexOf('travel') !== -1 ? true : false, //week& 아티클일 경우 광고 타입이 변경됨
+                    $adCriteoNetwork = isTravel ? $adCriteoNetwork = $('#display_749').css('margin-left', '20px') : $('#criteo_network').css('margin-left', '20px'),
+                    $articleChildren = null,
+                    //$articleAppendLast = $('<div id="article_body_last" style="height:0px;width:0px;"></div>');
+                    relatedElementHeight = 0,
+                    jplus1 = 0,
+                    jplus2 = 0;
+
+                function init() {
+                    //$articleChildren = $articleBody.children();
+                    $articleChildren = $articleBody.children().filter(':not(div[class^=ab_jplus], div[class^=ab_related], #criteo_network)');
+
+                    if ($articleChildren.length === 0) {
+                        loadCriteo();
+                    }
+                    else {
+                        relatedElementHeight = $articleBody.find('>div.ab_related').outerHeight() || 0;
+                        jplus1 = $articleBody.find('>div.ab_jplus_notice').outerHeight() || 0;
+                        jplus2 = $articleBody.find('>div.ab_jplus').outerHeight() || 0;
+                        resetPosition();
+                    }
+                }
+
+                if ($adCriteoNetwork.length > 0) {
+                    init();
+                }
+
+                function resetPosition() {
+                    var $targetChild = null;
+                    for (var i = $articleChildren.length; i > 0; i--) {
+
+                        $targetChild = $articleChildren.eq(i -1);
+
+                        //utils.log('## $targetChild');
+                        //utils.log($targetChild);
+
+                        // 마지막 요소탐색이 끝나면
+                        // 컴포넌트 여부 체크
+                        if (i == 1 || $targetChild.is('div[class^=tag_], img, div[class^=ab_]')) {
+                            if (i != 1) {
+                                $adCriteoNetwork.css('margin-top', 0);
+                            }
+                            loadCriteo();
+                            return;
+                        }
+
+                        //$targetChild.after($adCriteoNetwork); //이걸 왜 넣었는지 모르겠다..
+
+                        if ($("div[style*='background:'][style*='width:'][style*='border:'][style*='border-image:']").length > 0) {
+                        	$articleBody.append($adCriteoNetwork);
+                        }
+                        else {
+							if (isBodyInside()) {
+								if (i == $articleChildren.length) {
+									$articleBody.append($adCriteoNetwork);
+								}
+								else {
+									$articleChildren.eq($targetChild.index() +1).before($adCriteoNetwork);
+								}
+								loadCriteo();
+								return;
+
+							}
+							else {
+								$targetChild.before($adCriteoNetwork);
+								if (isBodyInside()) {
+									//$targetChild.after($adCriteoNetwork); //이걸 왜 넣었는지 모르겠다..
+									loadCriteo();
+									return;
+								}
+							}
+						}
+                    }
+                };
+
+                function isBodyInside() {
+                    var adOffsetBottom = 0,
+                        articleOffsetBottom = 0;
+
+                    adOffsetBottom = $articleBody.offset().top + $adCriteoNetwork.offset().top + $adCriteoNetwork.outerHeight(true);
+                    articleOffsetBottom = $articleBody.offset().top + $articleBody.height() - relatedElementHeight - jplus1 - jplus2;  // article_body 높이 계산에 제외 할 요소들의 높이 제거
+
+                    adOffsetBottom = Math.ceil(adOffsetBottom);
+                    articleOffsetBottom = Math.ceil(articleOffsetBottom);
+
+                    return adOffsetBottom < articleOffsetBottom ? true : false;
+                }
+
+                function loadCriteo() {
+                    if (isCulture) {
+                        $('#criteo_network', $articleBody).loadAd({ type: 'da_250_culture' });
+                    }
+                    else if (utils.menu.getPageMenuKey().toLowerCase().indexOf('politics') !== -1) {
+                    	$('#criteo_network', $articleBody).loadAd({ type: 'da_250_politics' });
+                    }
+                    else {
+                        if (!isTravel) {
+                            $('#criteo_network', $articleBody).loadAd({ type: 'da_250_1' });
+                        }
+                    }
+                }
+            };
+        }
+
+        function articleScrap(totalId) {
+
+            if(totalId.length == 0) {
+                return alert('요청을 처리중 오류가 발생했습니다.\n새로 고침 후, 다시 시도해주세요.');
+            }
+
+            var url = utils.config('apiPath') + '/article/' + totalId + '/subscribe';
+
+            if(!utils.config(CONFIG_NAMES.isLogin)) {
+                return alert('로그인 후,\n\이용하실 수 있습니다.');
+            }
+
+            utils.ajaxPost({
+                url: url,
+                success: function(res) {
+                    if(res.IsSuccess) {
+                        alert('기사가 스크랩되었습니다.\n\'독자서비스> MY 뉴스\'에서 확인하실 수 있습니다.');
+                    } else {
+                        if(res.Code === 'Duplicated') {
+                            alert('이미 스크랩한 기사입니다.');
+                        } else {
+                            alert('요청을 처리중 오류가 발생했습니다.\n새로 고침 후, 다시 시도해주세요.');
+                        }
+                    }
+                }
+            });
+        }
+
+        function targetFollow($btn, id, type, isFollow) {
+            var unfollowMessage = {
+                reporter: '해당 기자를 구독해지하시겠습니까?',
+                issue: '해당 이슈를 구독해지하시겠습니까?'
+            };
+
+            if(!id || !type) {
+                return alert('요청을 처리중 오류가 발생했습니다.\n새로 고침 후, 다시 시도해주세요.');
+            }
+
+            //utils.log('## articleScrap');
+            var url = utils.config('apiPath') + '/' + type + '/' + id + (isFollow ? '/unsubscribe' : '/subscribe');
+
+            if(!utils.config(CONFIG_NAMES.isLogin)) {
+                return alert('로그인 후, 이용하실 수 있습니다.');
+            }
+
+            if(isFollow) {
+                if(!confirm(unfollowMessage[type])) {
+                    return false;
+                }
+            }
+
+            utils.ajaxPost({
+                url: url,
+                success: function(res) {
+
+                    if(isFollow) {
+                        unFollow(false);
+                    } else {
+                        follow(true);
+                    }
+                }
+            });
+
+            function follow(_isFollow) {
+                alert('구독되었습니다.\n\'독자서비스> 보관함\'에서 확인하실 수 있습니다.');
+                $btn.data('isFollow', _isFollow).parent().removeClass('toggle_off').addClass('toggle_on');
+            }
+
+            function unFollow(_isFollow) {
+                alert('구독해지 되었습니다.');
+                $btn.data('isFollow', _isFollow).parent().removeClass('toggle_on').addClass('toggle_off');
+            }
+        }
+
+
+
+        // 아티클
+        // 기자 리스트
+        //$('div#content div.journalist_area a').each(function() {
+        //    $(this).attr('href', utils.getClocUrl($(this).attr('href'), 'joongang|article|reporter'));
+        //});
+
+        // 지면 보기
+        $('div.article_head .byline a').each(function() {
+            $(this).attr('href', utils.getClocUrl($(this).attr('href'), 'joongang|article|paper'));
+        });
+
+        // 관련 태그
+        $('div#content div.tag_list a').each(function() {
+            $(this).attr('href', utils.getClocUrl($(this).attr('href'), 'joongang|article|tagkeyword'));
+        });
+
+        // 섹션홈
+        var pathname = location.pathname.toLowerCase();
+        // BI
+        $('div#head div.logo a').each(function() {
+            if(pathname.indexOf('article') > -1) {
+                $(this).attr('href', utils.getClocUrl($(this).attr('href'), 'joongang|article|bi'));
+            } else {
+                $(this).attr('href', utils.getClocUrl($(this).attr('href'), 'joongang|section|bi'));
+            }
+        });
+
+        /* Cloc */
+    });
+})(window, document, jQuery);
